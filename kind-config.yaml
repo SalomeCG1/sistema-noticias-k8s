@@ -1,0 +1,16 @@
+# Clúster kind de 3 nodos: 1 control-plane + 2 workers
+# extraPortMappings expone los NodePort 30000 y 30001 en localhost de tu PC
+kind: Cluster
+apiVersion: kind.x-k8s.io/v1alpha4
+name: noticias
+nodes:
+  - role: control-plane
+    extraPortMappings:
+      - containerPort: 30000
+        hostPort: 30000
+        protocol: TCP
+      - containerPort: 30001
+        hostPort: 30001
+        protocol: TCP
+  - role: worker
+  - role: worker

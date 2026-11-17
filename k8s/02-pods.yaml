@@ -1,0 +1,62 @@
+# Pods del Sistema de Noticias
+# 1) Base de datos MySQL
+apiVersion: v1
+kind: Pod
+metadata:
+  name: mysql
+  labels:
+    app: mysql
+spec:
+  containers:
+    - name: mysql
+      image: mysql:8.0
+      envFrom:
+        - configMapRef:
+            name: mysql-config
+      ports:
+        - containerPort: 3306
+      volumeMounts:
+        - name: init-script
+          mountPath: /docker-entrypoint-initdb.d
+  volumes:
+    # Sin volumen persistente: los datos viven dentro del contenedor
+    # y se pierden si el Pod se elimina.
+    - name: init-script
+      configMap:
+        name: mysql-init
+---
+# 2) Sistema de noticias (registro / administración)
+apiVersion: v1
+kind: Pod
+metadata:
+  name: noticias-admin
+  labels:
+    app: noticias-admin
+spec:
+  containers:
+    - name: noticias-admin
+      image: noticias-admin:1.0
+      imagePullPolicy: Never   # la imagen se carga en kind con "kind load docker-image"
+      envFrom:
+        - configMapRef:
+            name: app-config
+      ports:
+        - containerPort: 3000
+---
+# 3) Portal (consulta pública)
+apiVersion: v1
+kind: Pod
+metadata:
+  name: portal
+  labels:
+    app: portal
+spec:
+  containers:
+    - name: portal
+      image: noticias-portal:1.0
+      imagePullPolicy: Never
+      envFrom:
+        - configMapRef:
+            name: app-config
+      ports:
+        - containerPort: 3000

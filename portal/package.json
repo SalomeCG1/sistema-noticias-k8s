@@ -1,0 +1,8 @@
+{
+  "name": "portal",
+  "version": "1.0.0",
+  "description": "Sistema de Noticias - portal",
+  "main": "app.js",
+  "scripts": { "start": "node app.js" },
+  "dependencies": { "express": "^4.21.2", "mysql2": "^3.11.5" }
+}

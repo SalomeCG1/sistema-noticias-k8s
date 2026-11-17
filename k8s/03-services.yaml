@@ -1,0 +1,42 @@
+# Services del Sistema de Noticias
+# 1) MySQL: solo accesible DENTRO del clúster (ClusterIP).
+#    Las apps lo encuentran por el nombre DNS "mysql-service".
+apiVersion: v1
+kind: Service
+metadata:
+  name: mysql-service
+spec:
+  type: ClusterIP
+  selector:
+    app: mysql
+  ports:
+    - port: 3306
+      targetPort: 3306
+---
+# 2) Sistema de noticias: accesible desde el navegador en localhost:30001
+apiVersion: v1
+kind: Service
+metadata:
+  name: noticias-admin-service
+spec:
+  type: NodePort
+  selector:
+    app: noticias-admin
+  ports:
+    - port: 3000
+      targetPort: 3000
+      nodePort: 30001
+---
+# 3) Portal: accesible desde el navegador en localhost:30000
+apiVersion: v1
+kind: Service
+metadata:
+  name: portal-service
+spec:
+  type: NodePort
+  selector:
+    app: portal
+  ports:
+    - port: 3000
+      targetPort: 3000
+      nodePort: 30000
